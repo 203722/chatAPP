@@ -1,4 +1,4 @@
-import 'package:chatapp_firebase/pages/chat_page.dart';
+import 'package:chatapp_firebase/presentation/chat/chat_page.dart';
 import 'package:chatapp_firebase/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 

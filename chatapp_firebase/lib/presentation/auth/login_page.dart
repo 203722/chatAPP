@@ -1,27 +1,26 @@
-import 'package:chatapp_firebase/helper/helper_function.dart';
-import 'package:chatapp_firebase/pages/auth/login_page.dart';
-import 'package:chatapp_firebase/pages/home_page.dart';
+import 'package:chatapp_firebase/utils/helper_function.dart';
+import 'package:chatapp_firebase/presentation/auth/register_page.dart';
+import 'package:chatapp_firebase/presentation/home/home_page.dart';
 import 'package:chatapp_firebase/service/auth_service.dart';
+import 'package:chatapp_firebase/service/database_service.dart';
 import 'package:chatapp_firebase/widgets/widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
-  List<String> listaDeOpciones = ["TOP","JG","MID","ADC","SUPP","CUALQUIERA"];
-  bool _isLoading = false;
+class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
   String email = "";
   String password = "";
-  String fullName = "";
-  String linea = "";
+  bool _isLoading = false;
   AuthService authService = AuthService();
   @override
   Widget build(BuildContext context) {
@@ -29,7 +28,8 @@ class _RegisterPageState extends State<RegisterPage> {
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(
-                  color: Theme.of(context).primaryColor))
+                  color: Theme.of(context).primaryColor),
+            )
           : SingleChildScrollView(
               child: Padding(
                 padding:
@@ -40,39 +40,25 @@ class _RegisterPageState extends State<RegisterPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
+                        Image.asset("assets/login.jpg", width: 200,),
                         const Text(
-                          "Registrate",
+                          "Social",
                           style: TextStyle(
                               fontSize: 60,
                               //fontWeight: FontWeight.bold,
                               fontFamily: "gideon roman",
                               color: Color(0xFFFFB526)),
                         ),
-                        const SizedBox(height: 100,),
-                        TextFormField(
-                          style: TextStyle(color: const Color.fromARGB(255, 189, 189, 189)),
-                          decoration: textInputDecoration.copyWith(
-                              labelText: "Full Name",
-                              prefixIcon: Icon(
-                                Icons.person,
-                                color: Theme.of(context).primaryColor,
-                              )),
-                          onChanged: (val) {
-                            setState(() {
-                              fullName = val;
-                            });
-                          },
-                          validator: (val) {
-                            if (val!.isNotEmpty) {
-                              return null;
-                            } else {
-                              return "Name cannot be empty";
-                            }
-                          },
+                        const SizedBox(height: 10),
+                        const Text(
+                          "Legends",
+                          style: TextStyle(
+                              fontSize: 60,
+                              //fontWeight: FontWeight.bold,
+                              fontFamily: "gideon roman",
+                              color: Color(0xFFFFB526)),
                         ),
-                        const SizedBox(
-                          height: 15,
-                        ),
+                        const SizedBox(height: 10),
                         TextFormField(
                           style: TextStyle(color: const Color.fromARGB(255, 189, 189, 189)),
                           decoration: textInputDecoration.copyWith(
@@ -86,7 +72,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               email = val;
                             });
                           },
-
                           // check tha validation
                           validator: (val) {
                             return RegExp(
@@ -119,35 +104,6 @@ class _RegisterPageState extends State<RegisterPage> {
                             });
                           },
                         ),
-                        const SizedBox(height: 15),
-                        DropdownButtonFormField<String>(
-                          items: listaDeOpciones.map((e) {
-                            return DropdownMenuItem<String>(
-                              value: e,
-                              child: Text(
-                                e,
-                                style: TextStyle(
-                                  color: const Color.fromARGB(255, 189, 189, 189),
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              linea = value!;
-                            });
-                          },
-                          isDense: true,
-                          isExpanded: true,
-                          decoration: textInputDecoration.copyWith(
-                            labelText: "Linea Preferida",
-                            prefixIcon: Icon(
-                              Icons.arrow_drop_down,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        ),
                         const SizedBox(
                           height: 20,
                         ),
@@ -160,12 +116,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30))),
                             child: const Text(
-                              "Register",
+                              "Sign In",
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
+                                  TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 16),
                             ),
                             onPressed: () {
-                              register();
+                              login();
                             },
                           ),
                         ),
@@ -173,18 +129,19 @@ class _RegisterPageState extends State<RegisterPage> {
                           height: 10,
                         ),
                         Text.rich(TextSpan(
-                          text: "Already have an account? ",
+                          text: "Don't have an account? ",
                           style: const TextStyle(
-                              color: Color.fromARGB(255, 255, 255, 255), fontSize: 14),
+                              color: Color.fromARGB(255, 210, 210, 210),
+                              fontSize: 14),
                           children: <TextSpan>[
                             TextSpan(
-                                text: "Login now",
+                                text: "Register here",
                                 style: const TextStyle(
-                                    color: Color.fromARGB(255, 255, 40, 40),
+                                    color: Color.fromARGB(255, 255, 48, 48),
                                     decoration: TextDecoration.underline),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    nextScreen(context, const LoginPage());
+                                    nextScreen(context, const RegisterPage());
                                   }),
                           ],
                         )),
@@ -195,19 +152,22 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  register() async {
+  login() async {
     if (formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
       await authService
-          .registerUserWithEmailandPassword(fullName, email, password, linea)
+          .loginWithUserNameandPassword(email, password)
           .then((value) async {
         if (value == true) {
-          // saving the shared preference state
+          QuerySnapshot snapshot =
+              await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+                  .gettingUserData(email);
+          // saving the values to our shared preferences
           await HelperFunctions.saveUserLoggedInStatus(true);
           await HelperFunctions.saveUserEmailSF(email);
-          await HelperFunctions.saveUserNameSF(fullName);
+          await HelperFunctions.saveUserNameSF(snapshot.docs[0]['fullName']);
           nextScreenReplace(context, const HomePage());
         } else {
           showSnackbar(context, Color(0xFFFFB526), value);

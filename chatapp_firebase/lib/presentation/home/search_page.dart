@@ -1,5 +1,5 @@
-import 'package:chatapp_firebase/helper/helper_function.dart';
-import 'package:chatapp_firebase/pages/chat_page.dart';
+import 'package:chatapp_firebase/utils/helper_function.dart';
+import 'package:chatapp_firebase/presentation/chat/chat_page.dart';
 import 'package:chatapp_firebase/service/database_service.dart';
 import 'package:chatapp_firebase/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

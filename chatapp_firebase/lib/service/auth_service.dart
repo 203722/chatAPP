@@ -1,4 +1,4 @@
-import 'package:chatapp_firebase/helper/helper_function.dart';
+import 'package:chatapp_firebase/utils/helper_function.dart';
 import 'package:chatapp_firebase/service/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -12,6 +12,7 @@ class AuthService {
               email: email, password: password))
           .user!;
 
+      // ignore: unnecessary_null_comparison
       if (user != null) {
         return true;
       }
@@ -28,6 +29,7 @@ class AuthService {
               email: email, password: password))
           .user!;
 
+      // ignore: unnecessary_null_comparison
       if (user != null) {
         // call our database service to update the user data.
         await DatabaseService(uid: user.uid).savingUserData(fullName, email, linea);

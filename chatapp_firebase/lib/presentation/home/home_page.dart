@@ -1,7 +1,7 @@
-import 'package:chatapp_firebase/helper/helper_function.dart';
-import 'package:chatapp_firebase/pages/auth/login_page.dart';
-import 'package:chatapp_firebase/pages/profile_page.dart';
-import 'package:chatapp_firebase/pages/search_page.dart';
+import 'package:chatapp_firebase/utils/helper_function.dart';
+import 'package:chatapp_firebase/presentation/auth/login_page.dart';
+import 'package:chatapp_firebase/presentation/home/profile_page.dart';
+import 'package:chatapp_firebase/presentation/home/search_page.dart';
 import 'package:chatapp_firebase/service/auth_service.dart';
 import 'package:chatapp_firebase/service/database_service.dart';
 import 'package:chatapp_firebase/widgets/group_tile.dart';
